@@ -12,7 +12,10 @@ require (
 	google.golang.org/genproto v0.0.0-20220314164441-57ef72a4c106 // indirect
 )
 
-require github.com/cosmos/ibc-go v1.2.2
+require (
+	github.com/cosmos/ibc-go v1.2.2
+	github.com/spf13/cobra v1.2.1
+)
 
 require (
 	filippo.io/edwards25519 v1.0.0-beta.2 // indirect
@@ -96,7 +99,6 @@ require (
 	github.com/rs/zerolog v1.23.0 // indirect
 	github.com/sasha-s/go-deadlock v0.2.1-0.20190427202633-1595213edefa // indirect
 	github.com/spf13/afero v1.6.0 // indirect
-	github.com/spf13/cobra v1.2.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.9.0 // indirect

@@ -1,6 +1,7 @@
 package app
 
 import (
+	appparams "github.com/ThariCommunity/thari/app/params"
 	"io"
 	"net/http"
 	"os"
@@ -15,7 +16,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/server/api"
 	"github.com/cosmos/cosmos-sdk/server/config"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
-	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/version"
@@ -85,7 +85,6 @@ import (
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/tendermint/spm/cosmoscmd"
 	"github.com/tendermint/spm/openapiconsole"
 
 	"github.com/ThariCommunity/thari/docs"
@@ -155,11 +154,7 @@ var (
 	}
 )
 
-var (
-	_ cosmoscmd.App           = (*App)(nil)
-	_ servertypes.Application = (*App)(nil)
-	_ simapp.App              = (*App)(nil)
-)
+var _ App = (*ThariApp)(nil)
 
 func init() {
 	userHomeDir, err := os.UserHomeDir()
@@ -173,7 +168,7 @@ func init() {
 // App extends an ABCI application, but with most of its parameters exported.
 // They are exported for convenience in creating helper functions, as object
 // capabilities aren't needed for testing.
-type App struct {
+type ThariApp struct {
 	*baseapp.BaseApp
 
 	cdc               *codec.LegacyAmino
@@ -218,7 +213,7 @@ type App struct {
 }
 
 // New returns a reference to an initialized blockchain app
-func New(
+func NewThariApp(
 	logger log.Logger,
 	db dbm.DB,
 	traceStore io.Writer,
@@ -226,10 +221,10 @@ func New(
 	skipUpgradeHeights map[int64]bool,
 	homePath string,
 	invCheckPeriod uint,
-	encodingConfig cosmoscmd.EncodingConfig,
+	encodingConfig appparams.EncodingConfig,
 	appOpts servertypes.AppOptions,
 	baseAppOptions ...func(*baseapp.BaseApp),
-) cosmoscmd.App {
+) *ThariApp {
 	appCodec := encodingConfig.Marshaler
 	cdc := encodingConfig.Amino
 	interfaceRegistry := encodingConfig.InterfaceRegistry
@@ -249,7 +244,7 @@ func New(
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
 
-	app := &App{
+	app := &ThariApp{
 		BaseApp:           bApp,
 		cdc:               cdc,
 		appCodec:          appCodec,
@@ -479,23 +474,23 @@ func New(
 }
 
 // Name returns the name of the App
-func (app *App) Name() string { return app.BaseApp.Name() }
+func (app *ThariApp) Name() string { return app.BaseApp.Name() }
 
 // GetBaseApp returns the base app of the application
-func (app App) GetBaseApp() *baseapp.BaseApp { return app.BaseApp }
+func (app ThariApp) GetBaseApp() *baseapp.BaseApp { return app.BaseApp }
 
 // BeginBlocker application updates every begin block
-func (app *App) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
+func (app *ThariApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
 	return app.mm.BeginBlock(ctx, req)
 }
 
 // EndBlocker application updates every end block
-func (app *App) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
+func (app *ThariApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
 	return app.mm.EndBlock(ctx, req)
 }
 
 // InitChainer application update at chain initialization
-func (app *App) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
+func (app *ThariApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
 	var genesisState GenesisState
 	if err := tmjson.Unmarshal(req.AppStateBytes, &genesisState); err != nil {
 		panic(err)
@@ -505,12 +500,12 @@ func (app *App) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.Res
 }
 
 // LoadHeight loads a particular height
-func (app *App) LoadHeight(height int64) error {
+func (app *ThariApp) LoadHeight(height int64) error {
 	return app.LoadVersion(height)
 }
 
 // ModuleAccountAddrs returns all the app's module account addresses.
-func (app *App) ModuleAccountAddrs() map[string]bool {
+func (app *ThariApp) ModuleAccountAddrs() map[string]bool {
 	modAccAddrs := make(map[string]bool)
 	for acc := range maccPerms {
 		modAccAddrs[authtypes.NewModuleAddress(acc).String()] = true
@@ -523,7 +518,7 @@ func (app *App) ModuleAccountAddrs() map[string]bool {
 //
 // NOTE: This is solely to be used for testing purposes as it may be desirable
 // for modules to register their own custom testing types.
-func (app *App) LegacyAmino() *codec.LegacyAmino {
+func (app *ThariApp) LegacyAmino() *codec.LegacyAmino {
 	return app.cdc
 }
 
@@ -531,47 +526,47 @@ func (app *App) LegacyAmino() *codec.LegacyAmino {
 //
 // NOTE: This is solely to be used for testing purposes as it may be desirable
 // for modules to register their own custom testing types.
-func (app *App) AppCodec() codec.Codec {
+func (app *ThariApp) AppCodec() codec.Codec {
 	return app.appCodec
 }
 
 // InterfaceRegistry returns an InterfaceRegistry
-func (app *App) InterfaceRegistry() types.InterfaceRegistry {
+func (app *ThariApp) InterfaceRegistry() types.InterfaceRegistry {
 	return app.interfaceRegistry
 }
 
 // GetKey returns the KVStoreKey for the provided store key.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *App) GetKey(storeKey string) *sdk.KVStoreKey {
+func (app *ThariApp) GetKey(storeKey string) *sdk.KVStoreKey {
 	return app.keys[storeKey]
 }
 
 // GetTKey returns the TransientStoreKey for the provided store key.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *App) GetTKey(storeKey string) *sdk.TransientStoreKey {
+func (app *ThariApp) GetTKey(storeKey string) *sdk.TransientStoreKey {
 	return app.tkeys[storeKey]
 }
 
 // GetMemKey returns the MemStoreKey for the provided mem key.
 //
 // NOTE: This is solely used for testing purposes.
-func (app *App) GetMemKey(storeKey string) *sdk.MemoryStoreKey {
+func (app *ThariApp) GetMemKey(storeKey string) *sdk.MemoryStoreKey {
 	return app.memKeys[storeKey]
 }
 
 // GetSubspace returns a param subspace for a given module name.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *App) GetSubspace(moduleName string) paramstypes.Subspace {
+func (app *ThariApp) GetSubspace(moduleName string) paramstypes.Subspace {
 	subspace, _ := app.ParamsKeeper.GetSubspace(moduleName)
 	return subspace
 }
 
 // RegisterAPIRoutes registers all application module routes with the provided
 // API server.
-func (app *App) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig) {
+func (app *ThariApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig) {
 	clientCtx := apiSvr.ClientCtx
 	rpc.RegisterRoutes(clientCtx, apiSvr.Router)
 	// Register legacy tx routes.
@@ -591,12 +586,12 @@ func (app *App) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig
 }
 
 // RegisterTxService implements the Application.RegisterTxService method.
-func (app *App) RegisterTxService(clientCtx client.Context) {
+func (app *ThariApp) RegisterTxService(clientCtx client.Context) {
 	authtx.RegisterTxService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.BaseApp.Simulate, app.interfaceRegistry)
 }
 
 // RegisterTendermintService implements the Application.RegisterTendermintService method.
-func (app *App) RegisterTendermintService(clientCtx client.Context) {
+func (app *ThariApp) RegisterTendermintService(clientCtx client.Context) {
 	tmservice.RegisterTendermintService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.interfaceRegistry)
 }
 
@@ -629,6 +624,6 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 }
 
 // SimulationManager implements the SimulationApp interface
-func (app *App) SimulationManager() *module.SimulationManager {
+func (app *ThariApp) SimulationManager() *module.SimulationManager {
 	return app.sm
 }
