@@ -9,6 +9,9 @@ import (
 )
 
 func main() {
+
+	app.SetAccountAddressPrefixes()
+
 	rootCmd, _ := cosmoscmd.NewRootCmd(
 		app.Name,
 		app.AccountAddressPrefix,
