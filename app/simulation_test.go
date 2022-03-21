@@ -1,6 +1,7 @@
 package app_test
 
 import (
+	"github.com/ThariCommunity/thari/app/params"
 	"os"
 	"testing"
 	"time"
@@ -73,7 +74,7 @@ func BenchmarkSimulation(b *testing.B) {
 
 	encoding := cosmoscmd.MakeEncodingConfig(app.ModuleBasics)
 
-	app := app.New(
+	app := app.NewThariApp(
 		logger,
 		db,
 		nil,
@@ -81,7 +82,7 @@ func BenchmarkSimulation(b *testing.B) {
 		map[int64]bool{},
 		app.DefaultNodeHome,
 		0,
-		encoding,
+		params.EncodingConfig(encoding),
 		simapp.EmptyAppOptions{},
 	)
 
