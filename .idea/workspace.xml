@@ -5,16 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cfaf94bb-74d0-4973-8ba4-6eb5b9b6c790" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/cmd/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/export.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/export.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/prefix.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/simulation_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/simulation_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/tharid/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/static/openapi.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docs/static/openapi.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testutil/network/network.go" beforeDir="false" afterPath="$PROJECT_DIR$/testutil/network/network.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

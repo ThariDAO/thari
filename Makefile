@@ -63,7 +63,7 @@ mod-vendor: tools
 
 .PHONY: proto-gen
 proto-gen:
-	@.scripts/proto-gen.sh
+	@scripts/generate-proto.sh
 
 .PHONY: proto-lint
 proto-lint:
