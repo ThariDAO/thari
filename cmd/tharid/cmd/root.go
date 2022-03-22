@@ -136,10 +136,12 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
 
 	rootCmd.AddCommand(
 		// genutilcli.InitCmd(thari.ModuleBasics, thari.DefaultNodeHome),
+		genutilcli.InitCmd(thari.ModuleBasics, thari.DefaultNodeHome),
 		genutilcli.CollectGenTxsCmd(banktypes.GenesisBalancesIterator{}, thari.DefaultNodeHome),
 		genutilcli.MigrateGenesisCmd(),
 		genutilcli.GenTxCmd(thari.ModuleBasics, encodingConfig.TxConfig, banktypes.GenesisBalancesIterator{}, thari.DefaultNodeHome),
 		genutilcli.ValidateGenesisCmd(thari.ModuleBasics),
+		AddGenesisAccountCmd(thari.DefaultNodeHome),
 		tmcli.NewCompletionCmd(rootCmd, true),
 		testnetCmd(thari.ModuleBasics, banktypes.GenesisBalancesIterator{}),
 		tmcmds.RollbackStateCmd,

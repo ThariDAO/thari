@@ -385,10 +385,14 @@ func NewThariApp(
 	app.mm.SetOrderBeginBlockers(
 		upgradetypes.ModuleName, capabilitytypes.ModuleName, minttypes.ModuleName, distrtypes.ModuleName, slashingtypes.ModuleName,
 		evidencetypes.ModuleName, stakingtypes.ModuleName, ibchost.ModuleName,
-		feegrant.ModuleName,
+		feegrant.ModuleName, crisistypes.ModuleName, genutiltypes.ModuleName, authtypes.ModuleName,
+		paramstypes.ModuleName, banktypes.ModuleName, govtypes.ModuleName,transferModule.Name(), vesting.AppModuleBasic{}.Name(),
 	)
 
-	app.mm.SetOrderEndBlockers(crisistypes.ModuleName, govtypes.ModuleName, stakingtypes.ModuleName)
+	app.mm.SetOrderEndBlockers(upgradetypes.ModuleName, capabilitytypes.ModuleName, minttypes.ModuleName, distrtypes.ModuleName, slashingtypes.ModuleName,
+		evidencetypes.ModuleName, stakingtypes.ModuleName, ibchost.ModuleName,
+		feegrant.ModuleName, crisistypes.ModuleName, genutiltypes.ModuleName, authtypes.ModuleName,
+		paramstypes.ModuleName, banktypes.ModuleName, govtypes.ModuleName, transferModule.Name(), vesting.AppModuleBasic{}.Name())
 
 	// NOTE: The genutils module must occur after staking so that pools are
 	// properly initialized with tokens from genesis accounts.
@@ -396,6 +400,7 @@ func NewThariApp(
 	// so that other modules that want to create or claim capabilities afterwards in InitChain
 	// can do so safely.
 	app.mm.SetOrderInitGenesis(
+		upgradetypes.ModuleName,
 		capabilitytypes.ModuleName,
 		authtypes.ModuleName,
 		banktypes.ModuleName,
@@ -409,6 +414,9 @@ func NewThariApp(
 		genutiltypes.ModuleName,
 		evidencetypes.ModuleName,
 		ibctransfertypes.ModuleName,
+		vesting.AppModuleBasic{}.Name(),
+		paramstypes.ModuleName,
+		feegrant.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
